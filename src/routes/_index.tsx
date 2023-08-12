@@ -3,7 +3,8 @@ import { getAuth } from "@clerk/remix/ssr.server";
 import { redirect } from "@remix-run/node";
 
 import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
-import { Modal } from "~/components/ui/modal";
+import { useEffect } from "react";
+import { useStoreModal } from "~/hooks/use-store-modal";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -21,16 +22,17 @@ export const loader: LoaderFunction = async (args) => {
 };
 
 export default function Index() {
+  const { isOpen, onOpen } = useStoreModal();
+
+  useEffect(() => {
+    if (!isOpen) {
+      onOpen();
+    }
+  }, [isOpen, onOpen]);
+
   return (
     <div className="p-4">
-      <Modal
-        title="Test"
-        description="Description Test"
-        isOpen={true}
-        onClose={() => {}}
-      >
-        Children
-      </Modal>
+      Root Page
       <UserButton afterSignOutUrl="/" />
     </div>
   );

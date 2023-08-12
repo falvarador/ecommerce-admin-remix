@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
+import { ModalProvider } from "~/providers/modal-provider";
 import styles from "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -31,6 +32,7 @@ function App() {
         <Links />
       </head>
       <body>
+        <ModalProvider />
         <Outlet />
         <ScrollRestoration />
         <Scripts />

@@ -30,10 +30,5 @@ export default function Index() {
     }
   }, [isOpen, onOpen]);
 
-  return (
-    <div className="p-4">
-      Root Page
-      <UserButton afterSignOutUrl="/" />
-    </div>
-  );
+  return null;
 }

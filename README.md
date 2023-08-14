@@ -10,7 +10,7 @@ This is an ecommerce-admin project made with [Remix](https://remix.run) 💿 and
 4. [shadcn/ui] (https://ui.shadcn.com/)
 5. [Clerk] (https://dashboard.clerk.com/)
 6. [Zustand] (https://docs.pmnd.rs/zustand/getting-started/introduction)
-7. [Supabase] (https://app.supabase.io/)
+7. [PlanetScale] (https://planetscale.com/)
 
 ## Getting Started
 

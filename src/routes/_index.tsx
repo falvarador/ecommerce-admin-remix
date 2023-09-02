@@ -1,24 +1,42 @@
-import { UserButton } from "@clerk/remix";
-import { getAuth } from "@clerk/remix/ssr.server";
-import { redirect } from "@remix-run/node";
-
-import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { useEffect } from "react";
-import { useStoreModal } from "~/hooks/use-store-modal";
+import { UserButton } from "@clerk/remix";
+
+import {
+  redirect,
+  type LoaderFunction,
+  type V2_MetaFunction,
+  json,
+} from "@remix-run/node";
+
+import { dependenciesLocator } from "@/core/common/dependencies";
+import { useStoreModal } from "@/hooks";
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Dashboard" },
+    { name: "description", content: "eCommerce dashboard" },
   ];
 };
 
 export const loader: LoaderFunction = async (args) => {
-  const { userId } = await getAuth(args);
-  if (!userId) {
-    return redirect("/sign-in");
+  const ploc = dependenciesLocator.storePloc();
+  await ploc.getStoreByUser(args);
+
+  const { store, error } = ploc.currentState;
+
+  if (error?.kind === "AnonymousUserError") {
+    throw redirect("/sign-in");
   }
-  return {};
+
+  if (error) {
+    throw json({ error: error.kind }, { status: 500 });
+  }
+
+  if (store) {
+    return redirect(`/${store.id}`);
+  }
+
+  return json({ store });
 };
 
 export default function Index() {
@@ -30,5 +48,5 @@ export default function Index() {
     }
   }, [isOpen, onOpen]);
 
-  return null;
+  return <UserButton afterSignOutUrl="/" />;
 }

@@ -1,56 +1,52 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import {
-  redirect,
-  type LinksFunction,
-  type LoaderFunction,
+import { json, redirect } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LinksFunction,
+  LoaderFunction,
 } from "@remix-run/node";
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
 } from "@remix-run/react";
-import { rootAuthLoader } from "@clerk/remix/ssr.server";
+
 import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
-import { ModalProvider } from "~/providers/modal-provider";
-import { ToastProvider } from "~/providers/toast-provider";
-import { StoreService } from "~/services/store-service";
-import styles from "~/tailwind.css";
-import type { ActionFunction } from "react-router-dom";
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
+
+import { dependenciesLocator } from "@/core/common/dependencies";
+import { ModalProvider } from "@/components/providers/modal-provider";
+import { ToastProvider } from "@/components/providers/toast-provider";
+
+import styles from "@/tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-export const loader: LoaderFunction = async (args) => {
-  return rootAuthLoader(args, async ({ request }) => {
-    const storeService = new StoreService();
-    const { userId } = request.auth;
-    if (!userId) {
-      return redirect("/sign-in", 302);
-    }
+export const loader: LoaderFunction = async (args) => rootAuthLoader(args);
 
-    const store = await storeService.getStoreByUserId(userId);
-    if (!store) {
-      return redirect(`/${store}`, 302);
-    }
+export const action: ActionFunction = async (args) => {
+  const ploc = dependenciesLocator.storePloc();
+  const formData = await args.request.formData();
 
-    return { store };
-  });
-};
-
-export const action: ActionFunction = async ({ request }) => {
-  const storeService = new StoreService();
-  const formData = await request.formData();
-  const userId = formData.get("userId") as string;
   const name = formData.get("name") as string;
-  return await storeService.addNewStore(userId, name);
-};
+  await ploc.saveStore(name, args);
 
-export const ErrorBoundary = V2_ClerkErrorBoundary();
+  const { store, error } = ploc.currentState;
+
+  if (error) {
+    throw json({ error: error.kind }, { status: 500 });
+  }
+
+  return redirect(`/${store?.id}`);
+};
 
 function App() {
   return (
@@ -72,5 +68,33 @@ function App() {
     </html>
   );
 }
+
+function CustomErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </div>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
+}
+
+export const ErrorBoundary = V2_ClerkErrorBoundary(CustomErrorBoundary);
 
 export default ClerkApp(App);

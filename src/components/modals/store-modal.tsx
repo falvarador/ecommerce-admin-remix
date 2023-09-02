@@ -1,29 +1,31 @@
+import { toast } from "react-hot-toast";
+import { useAuth } from "@clerk/remix";
 import { useFetcher } from "@remix-run/react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useAuth } from "@clerk/remix";
-import { Modal } from "~/components/ui/modal";
-import { useStoreModal } from "~/hooks/use-store-modal";
-import { toast } from "react-hot-toast";
+
 import {
+  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
+  Input,
+  Modal,
+} from "@/components/ui";
+import { useStoreModal } from "@/hooks";
 
 const schema = z.object({
   name: z.string().min(3).max(255),
 });
 
 export function StoreModal() {
-  const fetcher = useFetcher();
   const { userId } = useAuth();
+  const fetcher = useFetcher();
+
   const { isOpen, onClose } = useStoreModal();
 
   const form = useForm<z.infer<typeof schema>>({

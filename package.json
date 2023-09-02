@@ -2,8 +2,9 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "build": "prisma generate && remix build",
     "dev": "remix dev",
+    "postinstall": "prisma generate",
     "start": "remix-serve build",
     "typecheck": "tsc"
   },

@@ -1,5 +1,5 @@
 import { json, redirect } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
@@ -23,12 +23,12 @@ export const loader: LoaderFunction = async (args) => {
 };
 
 export default function DashboardLayout() {
-  const data = useLoaderData<typeof loader>();
+  // const data = useLoaderData<typeof loader>();
 
   return (
     <>
       <nav>This will be a navbar</nav>
-      <p>{JSON.stringify(data)}</p>
+      {/* <p>{JSON.stringify(data)}</p> */}
       <Outlet />
     </>
   );

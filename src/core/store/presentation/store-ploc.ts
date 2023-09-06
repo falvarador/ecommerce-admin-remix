@@ -60,6 +60,15 @@ export class StorePloc extends Ploc<StoreState> {
 
   private handleError(error: DataError): StoreState {
     switch (error.kind) {
+      case "AnonymousUserError": {
+        return {
+          store: storeInitialState.store,
+          error: {
+            kind: error.kind,
+            error: error.error,
+          },
+        };
+      }
       default: {
         return {
           store: storeInitialState.store,

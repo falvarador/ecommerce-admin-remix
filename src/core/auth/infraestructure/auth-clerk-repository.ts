@@ -10,11 +10,6 @@ export class AuthClerkRepository implements AuthRepository {
     return new Promise(async (resolve, _reject) => {
       try {
         const { userId } = await getAuth(args);
-
-        if (!userId) {
-          resolve(Either.right(""));
-        }
-
         resolve(Either.right(userId as string));
       } catch (error) {
         resolve(Either.left({ kind: "UnexpectedError", error } as DataError));

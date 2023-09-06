@@ -23,12 +23,9 @@ export const loader: LoaderFunction = async (args) => {
 };
 
 export default function DashboardLayout() {
-  // const data = useLoaderData<typeof loader>();
-
   return (
     <>
       <nav>This will be a navbar</nav>
-      {/* <p>{JSON.stringify(data)}</p> */}
       <Outlet />
     </>
   );

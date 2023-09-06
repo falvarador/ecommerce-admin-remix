@@ -18,8 +18,7 @@ import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
-import { ModalProvider } from "@/components/providers/modal-provider";
-import { ToastProvider } from "@/components/providers/toast-provider";
+import { ModalProvider, ToastProvider } from "@/components/providers";
 
 import styles from "@/tailwind.css";
 
@@ -28,7 +27,7 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-export const loader: LoaderFunction = async (args) => rootAuthLoader(args);
+export const loader: LoaderFunction = (args) => rootAuthLoader(args);
 
 export const action: ActionFunction = async (args) => {
   const ploc = dependenciesLocator.storePloc();
@@ -45,6 +44,9 @@ export const action: ActionFunction = async (args) => {
 
   return redirect(`/${store?.id}`);
 };
+
+// add a Catch Boundary
+export const CatchBoundary = V2_ClerkErrorBoundary();
 
 function App() {
   return (
@@ -66,33 +68,5 @@ function App() {
     </html>
   );
 }
-
-// function CustomErrorBoundary() {
-//   const error = useRouteError();
-
-//   if (isRouteErrorResponse(error)) {
-//     return (
-//       <div>
-//         <h1>
-//           {error.status} {error.statusText}
-//         </h1>
-//         <p>{error.data}</p>
-//       </div>
-//     );
-//   } else if (error instanceof Error) {
-//     return (
-//       <div>
-//         <h1>Error</h1>
-//         <p>{error.message}</p>
-//         <p>The stack trace is:</p>
-//         <pre>{error.stack}</pre>
-//       </div>
-//     );
-//   } else {
-//     return <h1>Unknown Error</h1>;
-//   }
-// }
-
-export const ErrorBoundary = V2_ClerkErrorBoundary();
 
 export default ClerkApp(App);

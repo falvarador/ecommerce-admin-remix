@@ -1,4 +1,4 @@
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { useAuth } from "@clerk/remix";
 import { useFetcher } from "@remix-run/react";
 import { useForm } from "react-hook-form";

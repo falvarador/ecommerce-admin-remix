@@ -1,5 +1,5 @@
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 
 export function ToastProvider() {
-  return <Toaster />;
+  return <Toaster closeButton position="top-right" />;
 }

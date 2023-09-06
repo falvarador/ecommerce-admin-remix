@@ -1,7 +1,7 @@
 import type { DataFunctionArgs } from "@remix-run/node";
 
 import type { AuthRepository } from "@/core/auth/domain";
-import type { DataError, Either } from "@/core/common/domain";
+import { type DataError, Either } from "@/core/common/domain";
 
 export class GetUserIdUseCase {
   private authRepository: AuthRepository;
@@ -11,6 +11,15 @@ export class GetUserIdUseCase {
   }
 
   execute(args: DataFunctionArgs): Promise<Either<DataError, string>> {
-    return this.authRepository.getUserId(args);
+    const userId = this.authRepository.getUserId(args);
+
+    if (!userId) {
+      Either.left<DataError, string>({
+        kind: "AnonymousUserError",
+        error: "Sorry, you must be logged in to access this feature.",
+      });
+    }
+
+    return userId;
   }
 }

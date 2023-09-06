@@ -1,3 +1,4 @@
+import { getAuth } from "@clerk/remix/ssr.server";
 import { useEffect } from "react";
 import { UserButton } from "@clerk/remix";
 
@@ -19,14 +20,16 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export const loader: LoaderFunction = async (args) => {
+  const { userId } = await getAuth(args);
+
+  if (!userId) {
+    throw redirect("/sign-in", 302);
+  }
+
   const ploc = dependenciesLocator.storePloc();
-  await ploc.getStoreByUser(args);
+  await ploc.getStoreByUser(userId);
 
   const { store, error } = ploc.currentState;
-
-  if (error?.kind === "AnonymousUserError") {
-    throw redirect("/sign-in");
-  }
 
   if (error) {
     throw json({ error: error.kind }, { status: 500 });

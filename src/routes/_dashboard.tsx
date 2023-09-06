@@ -2,17 +2,25 @@ import { json, redirect } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 
+import { getAuth } from "@clerk/remix/ssr.server";
+
 import { dependenciesLocator } from "@/core/common/dependencies";
 
 export const loader: LoaderFunction = async (args) => {
+  const { userId } = await getAuth(args);
+
+  if (!userId) {
+    throw redirect("/sign-in", 302);
+  }
+
   const { storeId } = args.params;
   const ploc = dependenciesLocator.storePloc();
-  await ploc.getStore(storeId as string, args);
+  await ploc.getStore(userId, storeId as string);
 
   const { store, error } = ploc.currentState;
 
-  if (error?.kind === "AnonymousUserError") {
-    throw redirect("/sign-in", 302);
+  if (error) {
+    throw json({ error: error.kind }, { status: 500 });
   }
 
   if (!store) {

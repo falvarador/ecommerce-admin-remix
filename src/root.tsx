@@ -15,7 +15,7 @@ import {
 } from "@remix-run/react";
 
 import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
-import { rootAuthLoader } from "@clerk/remix/ssr.server";
+import { getAuth, rootAuthLoader } from "@clerk/remix/ssr.server";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
 import { ModalProvider, ToastProvider } from "@/components/providers";
@@ -30,11 +30,17 @@ export const links: LinksFunction = () => [
 export const loader: LoaderFunction = (args) => rootAuthLoader(args);
 
 export const action: ActionFunction = async (args) => {
+  const { userId } = await getAuth(args);
+
+  if (!userId) {
+    throw redirect("/sign-in", 302);
+  }
+
   const ploc = dependenciesLocator.storePloc();
   const formData = await args.request.formData();
 
   const name = formData.get("name") as string;
-  await ploc.saveStore(name, args);
+  await ploc.saveStore(userId, name);
 
   const { store, error } = ploc.currentState;
 

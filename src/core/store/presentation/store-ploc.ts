@@ -1,5 +1,3 @@
-import type { DataFunctionArgs } from "@remix-run/node";
-
 import type { DataError } from "@/core/common/domain";
 import { Ploc } from "@/core/common/presentation";
 import type { StoreState } from "@/core/store/presentation";
@@ -19,8 +17,8 @@ export class StorePloc extends Ploc<StoreState> {
     super(storeInitialState);
   }
 
-  async getStoreByUser(args: DataFunctionArgs) {
-    const result = await this.getStoreByUserIdUseCase.execute(args);
+  async getStoreByUser(userId: string) {
+    const result = await this.getStoreByUserIdUseCase.execute(userId);
 
     result.fold(
       (error) => this.changeState(this.handleError(error)),
@@ -32,8 +30,8 @@ export class StorePloc extends Ploc<StoreState> {
     );
   }
 
-  async getStore(storeId: string, args: DataFunctionArgs) {
-    const result = await this.getStoreUseCase.execute(storeId, args);
+  async getStore(userId: string, storeId: string) {
+    const result = await this.getStoreUseCase.execute(userId, storeId);
 
     result.fold(
       (error) => this.changeState(this.handleError(error)),
@@ -45,8 +43,8 @@ export class StorePloc extends Ploc<StoreState> {
     );
   }
 
-  async saveStore(name: string, args: DataFunctionArgs) {
-    const result = await this.saveStoreUseCase.execute(name, args);
+  async saveStore(userId: string, name: string) {
+    const result = await this.saveStoreUseCase.execute(userId, name);
 
     result.fold(
       (error) => this.changeState(this.handleError(error)),

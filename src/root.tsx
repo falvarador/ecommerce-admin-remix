@@ -51,8 +51,7 @@ export const action: ActionFunction = async (args) => {
   return redirect(`/${store?.id}`);
 };
 
-// add a Catch Boundary
-export const CatchBoundary = V2_ClerkErrorBoundary();
+export const ErrorBoundary = V2_ClerkErrorBoundary();
 
 function App() {
   return (

@@ -39,7 +39,7 @@ export const loader: LoaderFunction = async (args) => {
     return redirect(`/${store.id}`);
   }
 
-  return json({ store });
+  return {};
 };
 
 export default function Index() {

@@ -1,16 +1,18 @@
-import { getAuth } from "@clerk/remix/ssr.server";
 import { useEffect } from "react";
-import { UserButton } from "@clerk/remix";
-
 import {
-  redirect,
-  type LoaderFunction,
-  type V2_MetaFunction,
   json,
+  redirect,
+  type LoaderArgs,
+  type V2_MetaFunction,
 } from "@remix-run/node";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
+import { requireUserSession } from "@/routes/utils/session.server";
 import { useStoreModal } from "@/hooks";
+import type {
+  CommonStoreState,
+  SingleStoreState,
+} from "@/core/store/presentation";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -19,17 +21,14 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async (args) => {
-  const { userId } = await getAuth(args);
-
-  if (!userId) {
-    throw redirect("/sign-in", 302);
-  }
+export const loader = async (args: LoaderArgs) => {
+  const { userId } = await requireUserSession(args);
 
   const ploc = dependenciesLocator.storePloc();
   await ploc.getStoreByUser(userId);
 
-  const { store, error } = ploc.currentState;
+  const { store, error } = ploc.currentState as CommonStoreState &
+    SingleStoreState;
 
   if (error) {
     throw json({ error: error.kind }, { status: 500 });
@@ -51,5 +50,5 @@ export default function Index() {
     }
   }, [isOpen, onOpen]);
 
-  return <UserButton afterSignOutUrl="/" />;
+  return null;
 }

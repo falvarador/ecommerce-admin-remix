@@ -1,23 +1,23 @@
-import { json, redirect } from "@remix-run/node";
+import { json, redirect, type LoaderArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import type { LoaderFunction } from "@remix-run/node";
-
-import { getAuth } from "@clerk/remix/ssr.server";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
+import { Navbar } from "@/components";
+import { requireUserSession } from "@/routes/utils/session.server";
+import type {
+  CommonStoreState,
+  SingleStoreState,
+} from "@/core/store/presentation";
 
-export const loader: LoaderFunction = async (args) => {
-  const { userId } = await getAuth(args);
-
-  if (!userId) {
-    throw redirect("/sign-in", 302);
-  }
+export const loader = async (args: LoaderArgs) => {
+  const { userId } = await requireUserSession(args);
 
   const { storeId } = args.params;
   const ploc = dependenciesLocator.storePloc();
   await ploc.getStore(userId, storeId as string);
 
-  const { store, error } = ploc.currentState;
+  const { store, error } = ploc.currentState as SingleStoreState &
+    CommonStoreState;
 
   if (error) {
     throw json({ error: error.kind }, { status: 500 });
@@ -33,7 +33,7 @@ export const loader: LoaderFunction = async (args) => {
 export default function DashboardLayout() {
   return (
     <>
-      <nav>This will be a navbar</nav>
+      <Navbar />
       <Outlet />
     </>
   );

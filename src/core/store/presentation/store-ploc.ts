@@ -3,6 +3,7 @@ import { Ploc } from "@/core/common/presentation";
 import type { StoreState } from "@/core/store/presentation";
 import { storeInitialState } from "@/core/store/presentation";
 import type {
+  GetAllStoresByUserIdUseCase,
   GetStoreByUserIdUseCase,
   GetStoreUseCase,
   SaveStoreUseCase,
@@ -10,6 +11,7 @@ import type {
 
 export class StorePloc extends Ploc<StoreState> {
   constructor(
+    private getAllStoresByUserIdUseCase: GetAllStoresByUserIdUseCase,
     private getStoreByUserIdUseCase: GetStoreByUserIdUseCase,
     private getStoreUseCase: GetStoreUseCase,
     private saveStoreUseCase: SaveStoreUseCase
@@ -25,6 +27,19 @@ export class StorePloc extends Ploc<StoreState> {
       (store) =>
         this.changeState({
           store,
+          error: storeInitialState.error,
+        })
+    );
+  }
+
+  async getAllStoresByUser(userId: string) {
+    const result = await this.getAllStoresByUserIdUseCase.execute(userId);
+
+    result.fold(
+      (error) => this.changeState(this.handleError(error)),
+      (stores) =>
+        this.changeState({
+          stores,
           error: storeInitialState.error,
         })
     );
@@ -58,18 +73,10 @@ export class StorePloc extends Ploc<StoreState> {
 
   private handleError(error: DataError): StoreState {
     switch (error.kind) {
-      case "AnonymousUserError": {
-        return {
-          store: storeInitialState.store,
-          error: {
-            kind: error.kind,
-            error: error.error,
-          },
-        };
-      }
       default: {
         return {
-          store: storeInitialState.store,
+          store: null,
+          stores: [],
           error: {
             kind: "UnexpectedError",
             error: "An unexpected error has occurred. Please try again.",

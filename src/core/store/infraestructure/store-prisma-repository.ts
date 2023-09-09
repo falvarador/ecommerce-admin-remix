@@ -25,6 +25,22 @@ export class StorePrismaRepository implements StoreRepository {
     });
   }
 
+  getAllByUserId(userId: string): Promise<Either<DataError, Store[]>> {
+    return new Promise(async (resolve, _reject) => {
+      try {
+        const stores = await prismadb.store.findMany({
+          where: {
+            userId,
+          },
+        });
+
+        resolve(Either.right(stores as Store[]));
+      } catch (error) {
+        resolve(Either.left({ kind: "UnexpectedError", error } as DataError));
+      }
+    });
+  }
+
   getByUserId(userId: string): Promise<Either<DataError, Store>> {
     return new Promise(async (resolve, _reject) => {
       try {

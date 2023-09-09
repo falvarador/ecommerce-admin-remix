@@ -1,4 +1,5 @@
 import {
+  GetAllStoresByUserIdUseCase,
   GetStoreByUserIdUseCase,
   GetStoreUseCase,
   SaveStoreUseCase,
@@ -8,11 +9,15 @@ import { StorePrismaRepository } from "@/core/store/infraestructure";
 
 function storePloc(): StorePloc {
   const storeRepository = new StorePrismaRepository();
+  const getAllStoresByUserIdUseCase = new GetAllStoresByUserIdUseCase(
+    storeRepository
+  );
   const getStoreByUserIdUseCase = new GetStoreByUserIdUseCase(storeRepository);
   const getStoreUseCase = new GetStoreUseCase(storeRepository);
   const saveStoreUseCase = new SaveStoreUseCase(storeRepository);
 
   const storePloc = new StorePloc(
+    getAllStoresByUserIdUseCase,
     getStoreByUserIdUseCase,
     getStoreUseCase,
     saveStoreUseCase

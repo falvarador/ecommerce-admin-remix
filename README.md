@@ -20,6 +20,6 @@ This is an ecommerce-admin project made with [Remix](https://remix.run) 💿 and
 
 ## Deploy your own
 
-Deploy the example using [Vercel](https://vercel.com/now).
+Project deployed with [Vercel](https://vercel.com/now).
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/falvarador/ecommerce-admin-remix/EgNnH71JUuSkrEkxzZxgrHA2yAfu)

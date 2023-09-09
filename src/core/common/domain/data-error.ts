@@ -7,9 +7,4 @@ export interface UnexpectedError {
   error: string;
 }
 
-export interface AnonymousUserError {
-  kind: "AnonymousUserError";
-  error: string;
-}
-
-export type DataError = NoError | UnexpectedError | AnonymousUserError;
+export type DataError = NoError | UnexpectedError;

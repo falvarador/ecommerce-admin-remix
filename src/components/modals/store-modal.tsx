@@ -43,7 +43,10 @@ export function StoreModal() {
         throw new Error("User not found.");
       }
 
-      fetcher.submit({ userId, name }, { method: "POST" });
+      fetcher.submit(
+        { userId, name },
+        { method: "POST", action: "/resources/stores" }
+      );
       toast.success("Store created successfully.");
     } catch (error) {
       toast.error("Something went wrong, please try again later.");

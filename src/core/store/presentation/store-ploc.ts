@@ -1,7 +1,7 @@
-import type { DataError } from "@/core/common/domain";
-import { Ploc } from "@/core/common/presentation";
-import type { StoreState } from "@/core/store/presentation";
+import { StatelessPloc } from "@/core/common/presentation";
 import { storeInitialState } from "@/core/store/presentation";
+import type { DataError } from "@/core/common/domain";
+import type { StoreState } from "@/core/store/presentation";
 import type {
   GetAllStoresByUserIdUseCase,
   GetStoreByUserIdUseCase,
@@ -9,7 +9,7 @@ import type {
   SaveStoreUseCase,
 } from "@/core/store/domain/usecases";
 
-export class StorePloc extends Ploc<StoreState> {
+export class StorePloc extends StatelessPloc<StoreState> {
   constructor(
     private getAllStoresByUserIdUseCase: GetAllStoresByUserIdUseCase,
     private getStoreByUserIdUseCase: GetStoreByUserIdUseCase,

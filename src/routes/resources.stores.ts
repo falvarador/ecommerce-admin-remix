@@ -10,7 +10,6 @@ import type {
 } from "@/core/store/presentation";
 
 export const loader = async (args: LoaderArgs) => {
-  console.log("args", args);
   const { userId } = await requireUserSession(args);
 
   const ploc = dependenciesLocator.storePloc();
@@ -19,7 +18,6 @@ export const loader = async (args: LoaderArgs) => {
   const { stores, error } = ploc.currentState as CommonStoreState &
     ManyStoresState;
 
-  console.log("stores from database", stores, error);
   if (error) {
     throw json({ error: error.kind }, { status: 500 });
   }

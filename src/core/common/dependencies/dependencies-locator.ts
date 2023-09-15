@@ -4,7 +4,7 @@ import {
   GetStoreUseCase,
   SaveStoreUseCase,
 } from "@/core/store/domain/usecases";
-import { StorePloc } from "@/core/store/presentation";
+import { StorePloc, StoreModalPloc } from "@/core/store/presentation";
 import { StorePrismaRepository } from "@/core/store/infraestructure";
 
 function storePloc(): StorePloc {
@@ -26,6 +26,12 @@ function storePloc(): StorePloc {
   return storePloc;
 }
 
+function storeModalPloc(): StoreModalPloc {
+  const storeModalPloc = new StoreModalPloc();
+  return storeModalPloc;
+}
+
 export const dependenciesLocator = {
   storePloc,
+  storeModalPloc,
 };

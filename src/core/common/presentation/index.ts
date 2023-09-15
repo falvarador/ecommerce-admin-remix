@@ -1,1 +1,2 @@
-export * from "./ploc";
+export * from "./stateful-ploc";
+export * from "./stateless-ploc";

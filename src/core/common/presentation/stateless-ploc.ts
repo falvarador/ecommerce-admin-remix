@@ -1,4 +1,4 @@
-export abstract class Ploc<S> {
+export abstract class StatelessPloc<S> {
   private internalState: S;
 
   constructor(initalState: S) {

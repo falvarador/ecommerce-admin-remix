@@ -9,10 +9,6 @@ import {
 import { dependenciesLocator } from "@/core/common/dependencies";
 import { requireUserSession } from "@/routes/utils/session.server";
 import { useStoreModal } from "@/hooks";
-import type {
-  CommonStoreState,
-  SingleStoreState,
-} from "@/core/store/presentation";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -24,11 +20,8 @@ export const meta: V2_MetaFunction = () => {
 export const loader = async (args: LoaderArgs) => {
   const { userId } = await requireUserSession(args);
 
-  const ploc = dependenciesLocator.storePloc();
-  await ploc.getStoreByUser(userId);
-
-  const { store, error } = ploc.currentState as CommonStoreState &
-    SingleStoreState;
+  const service = dependenciesLocator.storeService();
+  const { store, error } = await service.getStoreByUser(userId);
 
   if (error) {
     throw json({ error: error.kind }, { status: 500 });

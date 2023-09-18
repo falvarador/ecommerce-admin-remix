@@ -1,16 +1,21 @@
 import { useSyncExternalStore } from "react";
 
-import { StatefulPloc } from "@/core/common/presentation";
-
-export function createState<S>(initialState: S) {
-  const ploc = new StatefulPloc<S>(initialState);
+export function createState<S>() {
+  let currentState: S;
+  const listeners = new Set<(state: S) => void>();
+  const isInitialized = false;
 
   return {
+    init: (initialState: S) => {
+      if (!isInitialized) {
+        currentState = initialState;
+      }
+    },
     setState(callback: (state: S) => S) {
       currentState = callback(currentState);
       listeners.forEach((listener) => listener(currentState));
     },
-    useSelector<T>(selector: (state: S) => T) {
+    useSelector(selector: (state: S) => S) {
       return useSyncExternalStore(
         (listener) => {
           listeners.add(listener);

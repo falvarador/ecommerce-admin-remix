@@ -3,20 +3,12 @@ import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
 import { requireUserSession } from "@/routes/utils/session.server";
-import type {
-  CommonStoreState,
-  ManyStoresState,
-  SingleStoreState,
-} from "@/core/store/presentation";
 
 export const loader = async (args: LoaderArgs) => {
   const { userId } = await requireUserSession(args);
 
-  const ploc = dependenciesLocator.storePloc();
-  await ploc.getAllStoresByUser(userId);
-
-  const { stores, error } = ploc.currentState as CommonStoreState &
-    ManyStoresState;
+  const service = dependenciesLocator.storeService();
+  const { stores, error } = await service.getAllStoresByUser(userId);
 
   if (error) {
     throw json({ error: error.kind }, { status: 500 });
@@ -28,14 +20,11 @@ export const loader = async (args: LoaderArgs) => {
 export const action = async (args: ActionArgs) => {
   const { userId } = await requireUserSession(args);
 
-  const ploc = dependenciesLocator.storePloc();
+  const service = dependenciesLocator.storeService();
   const formData = await args.request.formData();
 
   const name = formData.get("name") as string;
-  await ploc.saveStore(userId, name);
-
-  const { store, error } = ploc.currentState as CommonStoreState &
-    SingleStoreState;
+  const { store, error } = await service.saveStore(userId, name);
 
   if (error) {
     throw json({ error: error.kind }, { status: 500 });

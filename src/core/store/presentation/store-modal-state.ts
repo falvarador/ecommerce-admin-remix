@@ -1,9 +1,5 @@
-interface CommonStoreModalState {
+export type StoreModalState = {
   isOpen: boolean;
-}
-
-export type StoreModalState = CommonStoreModalState;
-
-export const storeModalInitialState: StoreModalState = {
-  isOpen: false,
+  onClose: () => void;
+  onOpen: () => void;
 };

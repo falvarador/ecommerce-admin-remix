@@ -1,31 +1,18 @@
-// import { create } from "zustand";
+import { create } from "zustand";
 
-import { createPloc } from "@/hooks";
-import { dependenciesLocator } from "@/core/common/dependencies";
-import type {
-  StoreModalPloc,
-  StoreModalState,
-} from "@/core/store/presentation";
+import type { StoreModalState } from "@/core/store/presentation";
 
-// export const useStoreModal = create<StoreModalState>((set) => ({
-//   isOpen: false,
-//   onOpen: () => set({ isOpen: true }),
-//   onClose: () => set({ isOpen: false }),
-// }));
+export const useStoreModal = create<StoreModalState>((set) => ({
+  isOpen: false,
+  onOpen: () => set({ isOpen: true }),
+  onClose: () => set({ isOpen: false }),
+}));
 
-export const useStoreModal = () => {
-  const ploc = dependenciesLocator.storeModalPloc();
-  const set = createPloc<StoreModalState>(ploc);
+// const state = createState<StoreModalState>();
+// state.init({ isOpen: false, onOpen: () => {}, onClose: () => {} });
 
-  return {
-    isOpen: set.useSelector((state) => state.isOpen),
-    onOpen: set.useSelector((state, ploc) => {
-      const currentPloc = ploc as StoreModalPloc;
-      return currentPloc.openModal;
-    }),
-    onClose: set.useSelector((state, ploc) => {
-      const currentPloc = ploc as StoreModalPloc;
-      return currentPloc.closeModal;
-    }),
-  };
-};
+// export const useStoreModal = {
+//   isOpen: state.useSelector((state) => state).isOpen,
+//   onOpen: () => state.setState((state) => ({ ...state, isOpen: true })),
+//   onClose: () => state.setState((state) => ({ ...state, isOpen: false })),
+// };

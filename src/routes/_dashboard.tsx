@@ -1,11 +1,11 @@
-import { json, redirect, type LoaderArgs } from "@remix-run/node";
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
 import { Navbar } from "@/components";
 import { requireUserSession } from "@/routes/utils/session.server";
 
-export const loader = async (args: LoaderArgs) => {
+export const loader = async (args: LoaderFunctionArgs) => {
   const { userId } = await requireUserSession(args);
 
   const { storeId } = args.params;

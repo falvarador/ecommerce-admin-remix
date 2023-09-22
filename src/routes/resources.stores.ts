@@ -1,10 +1,10 @@
 import { json, redirect } from "@remix-run/node";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
 import { requireUserSession } from "@/routes/utils/session.server";
 
-export const loader = async (args: LoaderArgs) => {
+export const loader = async (args: LoaderFunctionArgs) => {
   const { userId } = await requireUserSession(args);
 
   const service = dependenciesLocator.storeService();
@@ -17,7 +17,7 @@ export const loader = async (args: LoaderArgs) => {
   return json({ stores });
 };
 
-export const action = async (args: ActionArgs) => {
+export const action = async (args: ActionFunctionArgs) => {
   const { userId } = await requireUserSession(args);
 
   const service = dependenciesLocator.storeService();

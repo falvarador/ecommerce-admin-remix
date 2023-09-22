@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderArgs } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -9,7 +9,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix";
+import { ClerkApp, ClerkErrorBoundary } from "@clerk/remix";
 import { rootAuthLoader } from "@clerk/remix/ssr.server";
 
 import { ModalProvider, ToastProvider } from "@/components/providers";
@@ -21,9 +21,9 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-export const loader = (args: LoaderArgs) => rootAuthLoader(args);
+export const loader = (args: LoaderFunctionArgs) => rootAuthLoader(args);
 
-export const ErrorBoundary = V2_ClerkErrorBoundary();
+export const ErrorBoundary = ClerkErrorBoundary();
 
 function App() {
   return (

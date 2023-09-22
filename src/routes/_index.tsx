@@ -2,22 +2,22 @@ import { useEffect } from "react";
 import {
   json,
   redirect,
-  type LoaderArgs,
-  type V2_MetaFunction,
+  type LoaderFunctionArgs,
+  type MetaFunction,
 } from "@remix-run/node";
 
 import { dependenciesLocator } from "@/core/common/dependencies";
 import { requireUserSession } from "@/routes/utils/session.server";
 import { useStoreModal } from "@/hooks";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     { title: "Dashboard" },
     { name: "description", content: "eCommerce dashboard" },
   ];
 };
 
-export const loader = async (args: LoaderArgs) => {
+export const loader = async (args: LoaderFunctionArgs) => {
   const { userId } = await requireUserSession(args);
 
   const service = dependenciesLocator.storeService();

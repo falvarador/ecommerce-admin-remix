@@ -1,3 +1,6 @@
+import rdtStylesheet from "remix-development-tools/index.css";
+import { withDevTools } from "remix-development-tools";
+
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
@@ -18,6 +21,9 @@ import styles from "@/tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
+  ...(process.env.NODE_ENV === "development"
+    ? [{ rel: "stylesheet", href: rdtStylesheet }]
+    : []),
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
@@ -46,4 +52,6 @@ function App() {
   );
 }
 
-export default ClerkApp(App);
+export default process.env.NODE_ENV === "development"
+  ? withDevTools(ClerkApp(App))
+  : ClerkApp(App);

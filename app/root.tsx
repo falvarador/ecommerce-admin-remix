@@ -1,8 +1,4 @@
-import rdtStylesheet from "remix-development-tools/index.css";
-import { withDevTools } from "remix-development-tools";
-
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -17,15 +13,7 @@ import { rootAuthLoader } from "@clerk/remix/ssr.server";
 
 import { ModalProvider, ToastProvider } from "@/components/providers";
 
-import styles from "@/tailwind.css";
-
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: styles },
-  ...(process.env.NODE_ENV === "development"
-    ? [{ rel: "stylesheet", href: rdtStylesheet }]
-    : []),
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+import "./tailwind.css";
 
 export const loader = (args: LoaderFunctionArgs) => rootAuthLoader(args);
 
@@ -45,13 +33,11 @@ function App() {
         <ModalProvider />
         <Outlet />
         <ScrollRestoration />
-        <Scripts />
         <LiveReload />
+        <Scripts />
       </body>
     </html>
   );
 }
 
-export default process.env.NODE_ENV === "development"
-  ? withDevTools(ClerkApp(App))
-  : ClerkApp(App);
+export default ClerkApp(App);

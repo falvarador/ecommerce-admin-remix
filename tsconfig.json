@@ -17,5 +17,5 @@
     "strict": true,
     "target": "ES2019"
   },
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx"]
 }
